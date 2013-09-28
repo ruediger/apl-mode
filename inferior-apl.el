@@ -77,6 +77,7 @@ The content is sent to the APL process."
 (defvar inferior-apl-mode-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map comint-mode-map)
+    (define-key map "\C-hd" 'apl-help)
     map)
   "Keymap for `inferior-apl-mode'.")
 
@@ -88,6 +89,8 @@ Key bindings:
   :syntax-table apl-mode-syntax-table
   :abbrev-table apl-mode-abbrev-table
   :group 'inferior-apl
+
+  (setq-local eldoc-documentation-function #'apl-eldoc-function)
 
   (setq comint-prompt-regexp inferior-apl-prompt-regexp
         comint-use-prompt-regexp t)

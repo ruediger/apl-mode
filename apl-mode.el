@@ -45,8 +45,16 @@
                                  (push name chars)))))
   "All APL Unicode characters.")
 
+(declare-function inferior-apl-eval-region "inferior-apl" '(begin end))
+(declare-function inferior-apl-eval-buffer "inferior-apl")
+(declare-function inferior-apl-eval-line "inferior-apl" '(&optional arg))
+
 (defvar apl-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map "\C-hd" 'apl-help)
+    (define-key map "\C-c\C-r" 'inferior-apl-eval-region) ;; TODO right key bindings?
+    (define-key map "\C-c\C-b" 'inferior-apl-eval-buffer)
+    (define-key map "\C-c\C-l" 'inferior-apl-eval-buffer)
     map)
   "Keymap for `apl-mode'.")
 
@@ -244,33 +252,46 @@ Format (CHARACTER . NAME).")
 ;  (setq-local info-lookup-mode 'apl-mode)
   )
 
+(defun apl-help-completing-read ()
+  "Read symbol name."
+  (let (def)
+    (when (or (looking-at apl--function-regexp)
+              (looking-at apl--operator-regexp))
+      (setq def (match-string 1)))
+    (completing-read
+     (format (if def "Symbol (default %s): "
+               "Symbol: ") def)
+     nil ;; TODO
+     nil nil nil nil def 'inherit-input-method)))
+
 (defun apl-help (symbol)
   "Provide help for SYMBOL."
-  (interactive "sSymbol: ") ;; TODO
-  (with-help-window apl-help-buffer
-    (let ((help-xref-following t))
-     (help-setup-xref (list #'apl-help symbol)
-                      (called-interactively-p 'interactive)))
-    ;; TODO system functions etc.
-    (let* ((func (assq (aref symbol 0) apl-functions))
-           (op (assq (aref symbol 0) apl-operators)))
-      (cond
-       (func
-        (princ (format "%s is an APL function.\n\n" symbol))
-        (when (cadr func)
-          (princ (format "Monadic: %s\nUsage: %sB\n %s\n\n" (car (cadr func))
-                         symbol
-                         (cdr (cadr func)))))
-        (when (car (cddr func))
-          (princ (format "Dyadic: %s\nUsage: A%sB\n %s\n"
-                         (car (car (cddr func)))
-                         symbol
-                         (cdr (car (cddr func)))))))
-       (op
-        (princ (format "%s is an APL operator: %s" symbol (cdr op))))
-       (t
-        (print (format "%s is unknown" symbol))))
-      (apl-help-mode))))
+  (interactive (list (apl-help-completing-read)))
+  (with-current-buffer apl-help-buffer
+    (apl-help-mode)
+    (with-help-window apl-help-buffer
+      (let ((help-xref-following t))
+        (help-setup-xref (list #'apl-help symbol)
+                         (called-interactively-p 'interactive)))
+      ;; TODO system functions etc.
+      (let* ((func (assq (aref symbol 0) apl-functions))
+             (op (assq (aref symbol 0) apl-operators)))
+        (cond
+         (func
+          (princ (format "%s is an APL function.\n\n" symbol))
+          (when (cadr func)
+            (princ (format "Monadic: %s\nUsage: %sB\n %s\n\n" (car (cadr func))
+                           symbol
+                           (cdr (cadr func)))))
+          (when (car (cddr func))
+            (princ (format "Dyadic: %s\nUsage: A%sB\n %s\n"
+                           (car (car (cddr func)))
+                           symbol
+                           (cdr (car (cddr func)))))))
+         (op
+          (princ (format "%s is an APL operator: %s" symbol (cdr op))))
+         (t
+          (print (format "%s is unknown" symbol))))))))
 
 ;; TODO put this in an apl-mode-init function?
 (add-to-list 'interpreter-mode-alist '("apl" . apl-mode))
