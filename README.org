@@ -1,0 +1,4 @@
+# -*- mode:org; mode:auto-fill; fill-column:80; coding:utf-8; -*-
+* apl-mode - Emacs mode for APL.
+See [[http://www.gnu.org/software/apl/][GNU APL]] for a free APL implementation.
+
