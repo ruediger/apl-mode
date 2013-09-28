@@ -1,4 +1,16 @@
 # -*- mode:org; mode:auto-fill; fill-column:80; coding:utf-8; -*-
 * apl-mode - Emacs mode for APL.
-See [[http://www.gnu.org/software/apl/][GNU APL]] for a free APL implementation.
+This is an Emacs mode for the APL programming language.  See [[http://www.gnu.org/software/apl/][GNU APL]] for a free
+APL implementation.
 
+It is in a very early stage of development and is buggy and missing functions.
+See todo.org and contribute patches!
+
+What is implemented so far:
+
+- basic mode (apl-mode)
+- some function help (needs improvement)
+- eldoc support
+- an input method based on the unicode character names (apl-input)
+- an advanced input method allowing stuff like "<-" for ← etc. (apl-input-x)
+- an inferior mode to run APL inside Emacs (inferior-apl)
