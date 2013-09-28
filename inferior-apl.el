@@ -112,6 +112,7 @@ Key bindings:
                  inferior-apl-startup-file)
                inferior-apl-args))
 
+;;;###autoload
 (defun inferior-apl (&optional arg)
   (interactive "P")
   (let ((buffer (get-buffer-create inferior-apl-buffer)))
@@ -122,6 +123,7 @@ Key bindings:
         (inferior-apl-startup)
         (inferior-apl-mode)))
     buffer))
+;;;###autoload
 (defalias 'run-apl #'inferior-apl)
 
 (defun inferior-apl-eval-region (begin end)
