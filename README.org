@@ -1,5 +1,9 @@
 # -*- mode:org; mode:auto-fill; fill-column:80; coding:utf-8; -*-
 * apl-mode - Emacs mode for APL.
+
+*NOTE:* I don't have any plans of updating this mode in the foreseeable future.
+Please take a look at [[https://github.com/lokedhs/gnu-apl-mode][GNU APL mode]] instead.
+
 This is an Emacs mode for the APL programming language.  See [[http://www.gnu.org/software/apl/][GNU APL]] for a free
 APL implementation.
 
